@@ -1,5 +1,3 @@
-use std::mem;
-
 pub fn quicksort<T: Ord>(b: &mut [T]) {
     if b.len() > 1 {
         let pivot = partition(b);
@@ -39,36 +37,35 @@ pub fn bubblesort<T: Ord>(b: &mut [T]) {
 pub fn mergesort<T: Ord + Clone>(b: &mut [T]) {
     let length = b.len();
     if length > 1 {
-        let (init, tail) = b.split_at_mut(length / 2);
-        mergesort(init);
-        mergesort(tail);
-        merge(init, tail);
+        let v: Vec<T>;
+        {
+            let (init, tail) = b.split_at_mut(length / 2);
+            mergesort(init);
+            mergesort(tail);
+            v = merge(init, tail);
+        }
+        b.clone_from_slice(&v[..]);
     }
 }
 
-fn merge<T: Ord + Clone>(a: &mut [T], b: &mut [T]) {
-    let mut res = vec![];
-    {
-        let mut xs = a.iter();
-        let mut ys = b.iter();
+fn merge<T: Ord + Clone>(a: &[T], b: &[T]) -> Vec<T> {
+    let mut res : Vec<T> = vec![];
+    let mut xs = a.iter();
+    let mut ys = b.iter().peekable();
 
-        while let Some(x) = xs.next() {
-            if let Some(y) = ys.next() {
-                if x < y {
-                    res.push(x);
-                } else {
-                    res.push(y);
-                }
-            } else {
-                res.push(x);
-            }
+    while let Some(x) = xs.next() {
+        loop {
+            if let Some(y) = ys.peek() { if x < y { break; } }
+            else { break; }
+            res.push(ys.next()
+                     .expect("Shouldn't ever happen!")
+                     .clone());
         }
-
-        while let Some(y) = ys.next() {
-            res.push(y);
-        }
+        res.push(x.clone());
     }
-    let (init, tail) = res.split_at_mut(a.len());
-    a.clone_from_slice(init);
-    b.clone_from_slice(tail);
+
+    while let Some(y) = ys.next() {
+        res.push(y.clone());
+    }
+    res
 }
