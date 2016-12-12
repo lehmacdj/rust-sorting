@@ -57,9 +57,7 @@ fn merge<T: Ord + Clone>(a: &[T], b: &[T]) -> Vec<T> {
         loop {
             if let Some(y) = ys.peek() { if x < y { break; } }
             else { break; }
-            res.push(ys.next()
-                     .expect("Shouldn't ever happen!")
-                     .clone());
+            res.push(ys.next().unwrap().clone());
         }
         res.push(x.clone());
     }
