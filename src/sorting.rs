@@ -49,7 +49,7 @@ pub fn mergesort<T: Ord + Clone>(b: &mut [T]) {
 }
 
 fn merge<T: Ord + Clone>(a: &[T], b: &[T]) -> Vec<T> {
-    let mut res : Vec<T> = vec![];
+    let mut res = vec![];
     let mut xs = a.iter();
     let mut ys = b.iter().peekable();
 
