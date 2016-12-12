@@ -1,4 +1,8 @@
 #[cfg(test)]
 mod tests;
 
-pub mod sorting;
+mod sorting;
+
+pub use sorting::mergesort;
+pub use sorting::bubblesort;
+pub use sorting::quicksort;
